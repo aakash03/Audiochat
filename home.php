@@ -186,6 +186,11 @@
 			<ul id="friend-list" >
 				<?php
 				   $res = mysqli_query($conn,"SELECT bro_id as ID, status as status FROM friends WHERE user_id = $userid UNION SELECT user_id as ID, status FROM friends WHERE bro_id = $userid ");
+				   $cnt = $res->num_rows;
+					if ($cnt==0) 
+					{
+						 echo "<label>No friends added.</label>";
+					}
 				   while( $row = mysqli_fetch_assoc($res) ) {
 
 					 $q = mysqli_query($conn, "SELECT * FROM user WHERE id = ".$row['ID']);
@@ -218,6 +223,11 @@
 -->
 			<?php
 				$res = mysqli_query($conn,"SELECT * FROM audio WHERE user_id IN ( SELECT bro_id FROM friends WHERE user_id = $userid AND status = 1 UNION SELECT user_id FROM friends WHERE bro_id = $userid AND status = 1 ) ORDER BY timestamp DESC");
+				$cnt = $res->num_rows;
+				if ($cnt==0) 
+				{
+					 echo "<label>No new story available.</label>";
+				}
 				while( $row = mysqli_fetch_assoc($res) ) {
 					$q = mysqli_query($conn, "SELECT * FROM user WHERE id = ".$row['user_id']);
 					$bro = mysqli_fetch_assoc($q);
@@ -237,6 +247,11 @@
 			<?php
 				$res = mysqli_query($conn,"SELECT * FROM audio WHERE user_id=$userid ORDER BY timestamp DESC");
 				$i=1;
+				$cnt = $res->num_rows;
+				if ($cnt==0) 
+				{
+					 echo "<label>You have not uploaded any stories.</label>";
+				}
 				while( $row = mysqli_fetch_assoc($res) ) {
 					echo '<li id="li-'.$row['id'].'" >';
 					echo "<label>Story ".$i." at ".$row['timestamp']."</label>";
@@ -259,6 +274,11 @@
 			<ul>
 			<?php
 				$res = mysqli_query($conn,"SELECT * FROM friends WHERE bro_id = $userid AND status = 0");
+				$cnt = $res->num_rows;
+				if ($cnt==0) 
+				{
+					 echo "<label>No new friend requests.</label>";
+				}
 				while( $row = mysqli_fetch_assoc($res) ) {
 					$q = mysqli_query($conn, "SELECT * FROM user WHERE id = ".$row['user_id']);
 					$bro = mysqli_fetch_assoc($q);
