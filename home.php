@@ -25,6 +25,15 @@
 
 	});
 	
+	function del( aid ) {
+		$.post("delaudio.php", { id: aid }, function( data ) {
+			if( data == "OK" ) {
+				var c = "#li-" + aid;
+				$(c).remove();
+			}
+		}); 
+	}
+	
 	function accept( uid ) {
 		$.post("addFriend.php", { id: uid, accept : 1 }, function( data ) {
 			if( data == "OK" ) {
@@ -216,9 +225,27 @@
 					echo "<p>".$bro['name']." broadcasted a new story at ".$row['timestamp']."</p>";
 				}
 			?>
+		</div>
+	<div class="step" id="step4">
+			<div class="title">
+				<h1>My Recordings</h1>
+			</div>
+			<div class="modify">
+			</div>
+		</div>
+		<div class="content" id="shipping">
+			<?php
+				$res = mysqli_query($conn,"SELECT * FROM audio WHERE user_id=$userid ORDER BY timestamp DESC");
+				$i=1;
+				while( $row = mysqli_fetch_assoc($res) ) {
+					echo '<li id="li-'.$row['id'].'" >';
+					echo "<label>Story ".$i." at ".$row['timestamp']."</label>";
+					echo "<img onclick = 'del( ".$row['id']." );' src='icon/deny.gif' title='Delete'/>";
+					$i++;
+				}
+			?>
 		
 		</div>
-	
  	</div>
  	<div class="column column3">
  		<div class="step" id="step5">
