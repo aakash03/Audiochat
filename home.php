@@ -21,8 +21,8 @@
 					return;
 				}
 				$("#friend-list").prepend('<li> <img src="icon/pending.png"/>' + $("#Mobile-Number").val() + '</li>');
+		location.reload(true);
 			});
-
 	});
 	
 	function del( aid ) {
@@ -31,6 +31,7 @@
 				var c = "#li-" + aid;
 				$(c).remove();
 			}
+		location.reload(true);
 		}); 
 	}
 	
@@ -41,6 +42,7 @@
 				$(c).remove();
 			}
 		}); 
+		location.reload(true);
 	}
 
 	function deny( uid ) {
@@ -124,6 +126,7 @@
 			}
 			.content li img {
 				padding-right: 20px;
+				padding-left: 20px;
 			}
 			
 			.content p {
@@ -218,9 +221,6 @@
 			</div>
 		</div>
 		<div class="content" id="shipping">
-<!--
-			Recent Activity
--->
 			<?php
 				$res = mysqli_query($conn,"SELECT * FROM audio WHERE user_id IN ( SELECT bro_id FROM friends WHERE user_id = $userid AND status = 1 UNION SELECT user_id FROM friends WHERE bro_id = $userid AND status = 1 ) ORDER BY timestamp DESC");
 				$cnt = $res->num_rows;
@@ -284,8 +284,8 @@
 					$bro = mysqli_fetch_assoc($q);
 					echo '<li id="li-'.$bro['id'].'" >';
 					echo "<label>".$bro['mobile']." (".$bro['name'].") </label>";
-					echo "<img onclick = 'deny( ".$bro['id']." );' src='icon/deny.gif' />";
-					echo "<img onclick = 'accept( ".$bro['id']." );' src='icon/accepted.gif' />";
+					echo "<img onclick = 'deny( ".$bro['id']." );' src='icon/deny.gif' title='Deny'/>";
+					echo "<img onclick = 'accept( ".$bro['id']." );' src='icon/accepted.gif' title='Accept'/>";
 					echo '</li>';
 				}
 			?>
@@ -293,7 +293,6 @@
 		</div>
 	</div>
 </div>
-
 </body>
     
 
