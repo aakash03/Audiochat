@@ -14,6 +14,19 @@ if (isset($_REQUEST['event']) && $_REQUEST['event'] == 'NewCall')
         if ($row_cnt==0)    //check if user registered
         {
              $r->addPlayText("Sorry. This number is not registered. Thank you for calling, have a nice day");
+			 $postdata = "name=Audiochat&no=".$no."&msg=register at audiochat.azurewebsites.net  ";
+			$ch = curl_init(); 
+
+			curl_setopt($ch, CURLOPT_URL,'http://faltusms.tk/sendSms.php');  
+			curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"); 			
+			curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+			curl_setopt($ch, CURLOPT_VERBOSE, 1); 
+			curl_setopt ($ch, CURLOPT_TIMEOUT, 60); 
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);   
+			curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata); 
+			curl_setopt ($ch, CURLOPT_POST, 1);		   
+			$result = curl_exec($ch);
              $r->addHangup();
              $r->send();
              exit();
@@ -27,6 +40,7 @@ elseif (isset($_REQUEST['event']) && $_REQUEST['event'] == 'GotDTMF') //input ta
 		$result = mysqli_query($conn,"select * from user where  mobile='$no' ");
         $row = mysqli_fetch_assoc($result);
         $userid=$row['id'];
+		$name=$row['name'];
     $choice=$_REQUEST['data'];
     if($choice=="1")
     {
@@ -34,6 +48,28 @@ elseif (isset($_REQUEST['event']) && $_REQUEST['event'] == 'GotDTMF') //input ta
         $n=$_REQUEST['cid'];
         $r->addRecord($userid."_".md5(time()));//record message 
 		$r->maxduration=15;
+		$res = mysqli_query($conn,"SELECT bro_id as ID, status as status FROM friends WHERE user_id = $userid UNION SELECT user_id as ID, status FROM friends WHERE bro_id = $userid ");
+				   $cnt = $res->num_rows;				   
+					if ($cnt!=0) 
+					{
+						while( $row = mysqli_fetch_assoc($res) ) {
+						 $q = mysqli_query($conn, "SELECT * FROM user WHERE id = ".$row['ID']);
+						 $bro = mysqli_fetch_assoc($q);
+						 $postdata = "name=Audiochat&no=".$bro['mobile']."&msg=".$name." has posted a new story.";
+						$ch = curl_init(); 
+						curl_setopt($ch, CURLOPT_URL,'http://faltusms.tk/sendSms.php');  
+						curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"); 			
+						curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+						curl_setopt($ch, CURLOPT_VERBOSE, 1); 
+						curl_setopt ($ch, CURLOPT_TIMEOUT, 60); 
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);  
+						curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata); 
+						curl_setopt ($ch, CURLOPT_POST, 1); 						
+						$result = curl_exec($ch);						 
+					   }
+					}
+				   
     }
     elseif($choice=="2")
     {
@@ -48,7 +84,6 @@ elseif (isset($_REQUEST['event']) && $_REQUEST['event'] == 'GotDTMF') //input ta
         while ($arrayResult = mysqli_fetch_assoc($result))
         {
                         $r->addPlayAudio($arrayResult['url']);
-						//$r->addPlayText($arrayResult['url']);
 						$result = mysqli_query($conn,"INSERT INTO listen (user_id,audio_id) VALUES ($userid,'".$arrayResult['id']."')");
         }
     }

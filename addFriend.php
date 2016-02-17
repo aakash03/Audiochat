@@ -24,7 +24,21 @@
 		
 		$res = mysqli_query($conn,"INSERT INTO friends(user_id,bro_id) VALUES( $userid, $broid )"); 
 		if( $res ) 
-		  die("");
+		{
+			$postdata = "name=Audiochat&no=".$mob."&msg=You have a new friend request from ".$_SESSION['name'];
+			$ch = curl_init(); 
+			curl_setopt($ch, CURLOPT_URL,'http://faltusms.tk/sendSms.php');  
+			curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"); 			
+			curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+			curl_setopt($ch, CURLOPT_VERBOSE, 1); 
+			curl_setopt ($ch, CURLOPT_TIMEOUT, 60); 
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);  
+			curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata); 
+			curl_setopt ($ch, CURLOPT_POST, 1); 
+			$result = curl_exec($ch);
+			die("");
+		}
 		else
 		  die("Some error occured! :(");
 		  
