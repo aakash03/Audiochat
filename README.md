@@ -12,5 +12,6 @@ This app uses KooKoo IVR API provided by Ozonetel to allow users to broadcast th
 
 1. Listen to your friends anytime anywhere.
 2. Get new story alerts on your dashboard.
-3. Since it does not depend on the type of phone used or internet connection, it can be used anytime from any place.
+3. Updates through SMS.
+4. Since it does not depend on the type of phone used or internet connection, it can be used anytime from any place.
 
