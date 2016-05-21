@@ -6,7 +6,7 @@ This app uses KooKoo IVR API provided by Ozonetel to allow users to broadcast th
 
 1. Register <a href="http://audiochat.azurewebsites.net" target="_blank">here</a> before using.
 2. Add friends and manage your stories from your dashboard.
-3. Call +914433012998 to broadcast new story or listen to friends.
+3. Call +914430908684 to broadcast new story or listen to friends.
 
 <b>FEATURES: </b>
 
